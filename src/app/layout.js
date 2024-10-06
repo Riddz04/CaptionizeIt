@@ -1,11 +1,15 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import Link from "next/link";
+
+import 'boxicons/css/boxicons.min.css';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -21,9 +25,24 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b 
+        from-black to-gray-800 min-h-screen text-white`}
       >
-        {children}
+        <main className="p-4 max-w-2xl mx-auto">
+          <header className="flex justify-between my-8">
+            <Link href="/" className="flex gap-1 items-center">
+              {/* Using custom box-icon element */}
+              <box-icon name='captions' type='solid' animation='burst' color= "white" ></box-icon>
+              <span>Captionize</span>
+            </Link>
+            <nav className="flex gap-7 text-white/70">
+              <Link href="/">Home</Link>
+              <Link href="/Pricing">Pricing</Link>
+              <a href="mailto:contact@captionize.com">Contact</a>
+            </nav>
+          </header>
+          {children}
+        </main>
       </body>
     </html>
   );

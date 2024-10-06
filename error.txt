@@ -1,0 +1,70 @@
+The error you're encountering, window is not defined, typically occurs because Next.js is a server-side rendering (SSR) framework, and during SSR, the window object (which exists only in the browser) is not available on the server. The boxicons.js script likely relies on the window object, which is not available during the initial render on the server.
+
+
+'use client';
+import UploadIcon from "./UploadIcon";
+import axios from 'axios';
+export default function UploadForm(){
+    async function upload(ev){
+        ev.preventDefault();
+        const files = ev.target.files;
+        if(files.length>0){
+            const file = files[0];
+            const res = await axios.postForm('/api/upload',{
+                file,
+            });
+            console.log(res.data);
+        }
+    }
+    return(
+        <label className="bg-green-500 py-2 px-6 rounded-full text-black inline-flex gap-1 border border-black cursor-pointer">
+          <UploadIcon />
+          <span>Choose your file</span>
+          <input onChange={upload} type="file" className="hidden"/>
+        </label>
+    );
+}
+
+
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { NextResponse } from 'next/server';
+import uniqid from "uniqid";
+
+export async function POST(req) {
+    const formData = await req.formData();
+    const file = formData.get('file');
+    const { name, type } = file;
+    const data = await file.arrayBuffer();
+
+    const s3client = new S3Client({
+        region: 'ap-south-1',
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        }
+    });
+
+    const id = uniqid();
+    const ext = name.split('.').slice(-1)[0];
+    const newName = id + '.' + ext ;
+
+    const uploadCommand = new PutObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Body: data,
+        ACL: 'public-read',
+        ContentType: type,
+        Key: newName,
+    });
+
+    await s3client.send(uploadCommand);
+
+    return NextResponse.json({
+        name,
+        ext,
+        newName,
+        id,
+        message: "file uploaded "
+    });
+}
+
+
