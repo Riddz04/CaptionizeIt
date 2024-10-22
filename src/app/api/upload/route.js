@@ -1,5 +1,4 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { NextResponse } from 'next/server';
 import uniqid from "uniqid";
 
 export async function POST(req) {
@@ -7,7 +6,7 @@ export async function POST(req) {
         const formData = await req.formData();
         const file = formData.get('file');
         if (!file) {
-            return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+            return Response.json({ error: "No file uploaded" }, { status: 400 });
         }
 
         const { name, type } = file;
@@ -35,7 +34,7 @@ export async function POST(req) {
 
         await s3client.send(uploadCommand);
 
-        return NextResponse.json({
+        return Response.json({
             name,
             ext,
             newName,
@@ -44,6 +43,6 @@ export async function POST(req) {
         });
     } catch (error) {
         console.error('Error uploading file:', error);
-        return NextResponse.json({ error: "Error uploading file" }, { status: 500 });
+        return Response.json({ error: "Error uploading file" }, { status: 500 });
     }
 }

@@ -32,8 +32,8 @@ export default function RootLayout({ children }) {
           <header className="flex justify-between my-8">
             <Link href="/" className="flex gap-1 items-center">
               {/* Using custom box-icon element */}
-              <box-icon name='captions' type='solid' animation='burst' color= "white" ></box-icon>
-              <span>Captionize</span>
+              <box-icon name='captions' type='solid' animation='fade-up' color='white' ></box-icon>
+              <span>CAPTIONIZE</span>
             </Link>
             <nav className="flex gap-7 text-white/70">
               <Link href="/">Home</Link>

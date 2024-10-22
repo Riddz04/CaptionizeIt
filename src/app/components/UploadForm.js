@@ -2,9 +2,11 @@
 import { useState } from 'react';
 import UploadIcon from "./UploadIcon";
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 export default function UploadForm() {
     const [uploadStatus, setUploadStatus] = useState('');
+    const router = useRouter();
 
     async function upload(ev) {
         ev.preventDefault();
@@ -20,14 +22,13 @@ export default function UploadForm() {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log(res.data);
                 setUploadStatus('Upload successful!');
+                const newName = res.data.newName;
+                router.push('/' + newName);
             } catch (error) {
                 console.error('Upload error:', error);
                 setUploadStatus('Upload failed. Please try again.');
                 if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
                     console.error(error.response.data);
                     console.error(error.response.status);
                     console.error(error.response.headers);
