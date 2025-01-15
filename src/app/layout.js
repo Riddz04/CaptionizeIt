@@ -24,18 +24,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js" async></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b 
         from-black to-gray-800 min-h-screen text-white`}
       >
         <main className="p-4 max-w-2xl mx-auto">
-          <header className="flex justify-between my-8">
+          <header className="flex justify-between my-2 sm:my-8">
             <Link href="/" className="flex gap-1 items-center">
               {/* Using custom box-icon element */}
-              <box-icon name='captions' type='solid' animation='fade-up' color='white' ></box-icon>
+              <box-icon name='captions' type='solid' animation='flashing' color='green' ></box-icon>
               <span>CAPTIONIZE</span>
             </Link>
-            <nav className="flex gap-7 text-white/70">
+            <nav className="flex items-center gap-2 sm:gap-6 text-white/80 text-sm sm:text-bas">
               <Link href="/">Home</Link>
               <Link href="/Pricing">Pricing</Link>
               <a href="mailto:contact@captionize.com">Contact</a>
