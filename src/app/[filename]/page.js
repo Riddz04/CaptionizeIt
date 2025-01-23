@@ -1,36 +1,31 @@
-import { exec } from "child_process";
 import path from "path";
+import processFile from "../../utils/processFile";
 import ClientComponent from "../../components/ClientComponent";
 
 export default async function FilePage({ params }) {
-    const { filename } = await params; // Extract `filename` from `params`
+    const { filename } = params; // Extract `filename` from `params`
     const baseName = path.basename(filename, ".mp4");
-    const srtFile = `${baseName}.srt`; // Update to use `.srt` file
+    const srtFile = `${baseName}.srt`; // The expected .srt file output
 
     console.log(`Processing file: ${filename}`);
 
-    // Run the shell script
-    await new Promise((resolve, reject) => {
-        exec(
-            `BUCKET_NAME=${process.env.BUCKET_NAME} AWS_REGION=${process.env.AWS_REGION} FILENAME=${filename} ./convert_mp4_to_wav.sh`,
-            (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error during processing: ${error.message}`);
-                    reject(error.message);
-                    return;
-                }
-                if (stderr) {
-                    console.warn(`Shell script stderr: ${stderr}`);
-                }
-                console.log(`Shell script stdout: ${stdout}`);
-                resolve();
-            }
+    try {
+        // Call the Node.js processFile function
+        await processFile(filename);
+        console.log("File processed successfully.");
+    } catch (error) {
+        console.error(`Error during file processing: ${error.message}`);
+        // Optionally, you can render an error message to the user
+        return (
+            <div>
+                <p>Error occurred while processing the file: {error.message}</p>
+            </div>
         );
-    });
+    }
 
     return (
         <div>
-            {/* Pass both `filename` and `srtFile` */}
+            {/* Pass both `filename` and `srtFile` to the client component */}
             <ClientComponent srtFile={srtFile} filename={filename} />
         </div>
     );
