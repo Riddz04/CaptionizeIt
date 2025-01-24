@@ -98,6 +98,7 @@ const processFile = async (filename) => {
 
   try {
     // Ensure Transcription directory exists
+    log("Ensuring Transcription directory exists...");
     await fs.mkdir(transcriptionDir, { recursive: true });
 
     // Step 1: Download file from S3
